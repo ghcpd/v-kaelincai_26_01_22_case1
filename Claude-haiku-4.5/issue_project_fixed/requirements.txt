@@ -1,0 +1,35 @@
+# Test Requirements
+
+## Installation
+
+Install pytest for running tests:
+
+```bash
+pip install pytest
+```
+
+## Running Tests
+
+Run all tests:
+```bash
+pytest tests/ -v
+```
+
+Run specific test module:
+```bash
+pytest tests/test_version.py -v
+pytest tests/test_functionality.py -v
+pytest tests/test_compatibility.py -v
+```
+
+Run with coverage:
+```bash
+pip install pytest-cov
+pytest tests/ --cov=fake_useragent --cov-report=html
+```
+
+## Test Files
+
+- `tests/test_version.py` - Version attribute tests
+- `tests/test_functionality.py` - Core functionality tests  
+- `tests/test_compatibility.py` - Backward compatibility tests
