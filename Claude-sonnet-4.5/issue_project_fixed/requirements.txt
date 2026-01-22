@@ -1,0 +1,7 @@
+# Test Dependencies
+
+# No external dependencies required for basic tests
+# Tests use only Python standard library
+
+# Optional: For advanced testing with pytest
+# pytest>=6.0.0
