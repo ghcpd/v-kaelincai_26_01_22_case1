@@ -1,7 +1,4 @@
-"""Settings for fake-useragent (unchanged)
-
-Version is defined here and must remain the single source of truth.
-"""
+"""Settings for fake-useragent"""
 from __future__ import absolute_import, unicode_literals
 
 __version__ = '0.1.6'
