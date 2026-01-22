@@ -1,4 +1,4 @@
-"""Simplified UserAgent class for demo"""
+"""Simplified UserAgent class for demo (unchanged)"""
 from __future__ import absolute_import, unicode_literals
 
 import random
