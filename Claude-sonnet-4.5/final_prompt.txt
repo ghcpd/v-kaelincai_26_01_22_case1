@@ -1,0 +1,247 @@
+# Bug Fix Task Prompt
+
+## Task Overview
+
+The fake-useragent library is missing the standard `__version__` attribute, which is a **missing functionality issue**. While the library defines a version number internally, it doesn't expose it as a top-level module attribute according to Python community standards (PEP 396). This prevents users from accessing the library version information in the standard way, affecting integration with other tools and libraries.
+
+**Impact Scope:** User experience, tool compatibility, API completeness
+
+## Current Project Structure
+
+```
+before_fix/
+├── fake_useragent/
+│   ├── __init__.py      # Module initialization file (where the issue lies)
+│   ├── settings.py      # Contains version number definition
+│   └── fake.py          # UserAgent class implementation
+├── test_version.py      # Test script demonstrating the issue
+└── README.md            # Project documentation
+```
+
+### Key Files Description
+
+- **`fake_useragent/__init__.py`**: Module entry point, responsible for exposing public API
+- **`fake_useragent/settings.py`**: Contains configuration and version definition (`__version__ = '0.1.6'`)
+- **`fake_useragent/fake.py`**: Core functionality implementation (UserAgent class)
+- **`test_version.py`**: Test script to verify version attribute availability
+
+## Bug Reproduction
+
+### Current Behavior (Problematic)
+
+```python
+import fake_useragent
+
+# ✓ VERSION constant is accessible
+print(fake_useragent.VERSION)  # Output: 0.1.6
+
+# ✗ Standard __version__ attribute is NOT accessible
+print(fake_useragent.__version__)  
+# Raises: AttributeError: module 'fake_useragent' has no attribute '__version__'
+```
+
+### Expected Behavior
+
+```python
+import fake_useragent
+
+# Both ways should work to access version information
+print(fake_useragent.VERSION)      # Output: 0.1.6
+print(fake_useragent.__version__)  # Output: 0.1.6
+
+# Compliant with Python standards (PEP 396)
+assert hasattr(fake_useragent, '__version__')
+```
+
+### Root Cause
+
+The module's `__init__.py` file imports `VERSION` but doesn't import `__version__`, making the attribute invisible in the module's top-level namespace.
+
+## Fix Task Requirements
+
+### 🎯 Target Project Structure
+
+Create a new directory `issue_project_fixed/` containing the fixed code:
+
+```
+issue_project_fixed/
+├── fake_useragent/
+│   ├── __init__.py      # Fixed module initialization file
+│   ├── settings.py      # Version definition (unchanged)
+│   └── fake.py          # UserAgent class (unchanged)
+├── tests/
+│   ├── test_version.py       # Version attribute tests
+│   ├── test_functionality.py # Functionality completeness tests
+│   └── test_compatibility.py # Backward compatibility tests
+├── README.md            # Usage guide and quick start
+├── SOLUTION.md          # Problem analysis and solution
+└── requirements.txt     # Test dependencies (if needed)
+```
+
+### 📝 Code Fix Requirements
+
+1. **Root Cause Analysis**
+   - Carefully analyze why `__version__` attribute is not accessible
+   - Understand Python module import mechanism
+   - Identify the minimal change solution
+
+2. **Fix Implementation**
+   - ✅ Make `fake_useragent.__version__` accessible
+   - ✅ Keep `fake_useragent.VERSION` working (backward compatibility)
+   - ✅ Ensure both point to the same value
+   - ✅ Don't modify version definition in `settings.py`
+   - ✅ Follow PEP 396 standard
+
+3. **Code Quality**
+   - Keep code concise
+   - Add necessary comments
+   - Follow existing code style
+   - Don't introduce unnecessary complexity
+
+4. **Backward Compatibility**
+   - Don't break existing `VERSION` access pattern
+   - Don't change any UserAgent class behavior
+   - Ensure existing code using this library remains unaffected
+
+### 🧪 Testing Requirements
+
+Create comprehensive test suite using pytest:
+
+1. **Version Attribute Tests** (`test_version.py`)
+   - Verify `__version__` attribute exists
+   - Verify `VERSION` attribute exists
+   - Verify both values are equal
+   - Verify version number format is correct
+
+2. **Functionality Completeness Tests** (`test_functionality.py`)
+   - Verify UserAgent class works properly
+   - Test various browser UA generation
+   - Ensure fix doesn't break core functionality
+
+3. **Backward Compatibility Tests** (`test_compatibility.py`)
+   - Simulate old code using `VERSION`
+   - Ensure all original APIs still work
+
+**Testing Standard:** All tests must pass, coverage should be as high as possible.
+
+### 📚 Documentation Requirements
+
+1. **README.md**
+   - Project introduction
+   - Problem description
+   - Fix explanation
+   - Quick start guide
+   - Usage examples (before/after comparison)
+   - How to run tests
+
+2. **SOLUTION.md**
+   - Detailed problem analysis
+   - Why this problem occurred
+   - Solution design rationale
+   - Implementation details
+   - Alternative approaches discussion (if any)
+   - Impact assessment of the fix
+
+3. **Code Comments**
+   - Add clear comments at key modification points
+   - Explain why changes were made
+
+### ✅ Verification Checklist
+
+After completing the fix, ensure:
+
+- [ ] `fake_useragent.__version__` can be accessed normally
+- [ ] `fake_useragent.VERSION` still works
+- [ ] Both return the same value
+- [ ] All tests pass (`pytest tests/`)
+- [ ] UserAgent basic functionality works
+- [ ] README.md and SOLUTION.md are complete
+- [ ] Code follows Python best practices
+- [ ] No new dependencies introduced (unless necessary)
+
+## Notes and Constraints
+
+⚠️ **Important Constraints:**
+
+1. **Don't Modify Original Project**
+   - All changes in new `issue_project_fixed/` directory
+   - Keep `before_fix/` directory unchanged as reference
+
+2. **Use Relative Paths**
+   - All path references use relative paths
+   - Ensure project can run from any location
+
+3. **Minimal Change Principle**
+   - Only modify necessary files
+   - Don't refactor unrelated code
+   - Keep it simple and direct
+
+4. **Test-First Approach**
+   - Write tests first to reproduce the problem
+   - After fix, tests should pass
+   - Tests should be easy to understand and run
+
+5. **Documentation Completeness**
+   - Documentation should clearly explain problem and solution
+   - Provide sufficient examples
+   - Anyone should understand the fix
+
+## Delivery Standards
+
+The completed fix should meet:
+
+1. ✅ **Functional Correctness**
+   - `fake_useragent.__version__` works properly
+   - Complies with PEP 396 standard
+   - Backward compatible
+
+2. ✅ **Testing Completeness**
+   - All tests pass
+   - Tests cover key scenarios
+   - Test documentation is clear
+
+3. ✅ **Documentation Quality**
+   - README provides clear usage guide
+   - SOLUTION deeply analyzes problem and solution
+   - Code comments are appropriate
+
+4. ✅ **Runnability**
+   - Anyone can clone the project
+   - Run `pytest tests/` to see results
+   - No extra configuration needed
+
+## Success Verification
+
+A successful fix is marked by running the following code without errors:
+
+```python
+import sys
+sys.path.insert(0, 'issue_project_fixed')
+
+import fake_useragent
+
+# Test __version__ attribute
+assert hasattr(fake_useragent, '__version__')
+print(f"✓ __version__ available: {fake_useragent.__version__}")
+
+# Test VERSION compatibility
+assert hasattr(fake_useragent, 'VERSION')
+print(f"✓ VERSION available: {fake_useragent.VERSION}")
+
+# Test consistency
+assert fake_useragent.__version__ == fake_useragent.VERSION
+print(f"✓ Both values match")
+
+# Test basic functionality
+ua = fake_useragent.UserAgent()
+print(f"✓ UserAgent works: {ua.chrome[:50]}...")
+
+print("\n🎉 All verifications passed! Fix successful!")
+```
+
+---
+
+**WORKSPACE INSTRUCTION:**
+Create all relevant project files under: `C:\BugBash\workSpace4\Claude-sonnet-4.5`
+
+Please analyze the problem, design a solution, and implement the fix. Remember to keep it simple, effective, and thoroughly test your fix.
